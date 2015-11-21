@@ -1,3 +1,4 @@
+
 /**
  * Constructor of the notification class
  * @param: arg (Object)
@@ -91,7 +92,7 @@ notification.prototype.bind = function(arg) {
 
 		this.connect(arg.connect);
 	} else {
-		// TODO: dont know what to do yet
+		// TODO: dont know what to do yet @deadline: 1 week
 		console.error('[redis notification] not connected yet');
 	}
 

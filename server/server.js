@@ -58,6 +58,8 @@ redisMClient.on('ready', function() {
 
 // list of commands to distnguish type of data to be
 // retrieved
+// TODO: add more command, cover each required one
+// @deadline: 1 week
 var commands = {
     get: ['set', 'incr', 'decr'],
     lrange: ['lpush', 'rpush', 'lpop', 'rpop'],
@@ -82,7 +84,7 @@ redisClient.on('message', function(channel, message) {
 
     // retirve the key from channel value
     // TODO: incase we dont get correct val from
-    // this regex
+    // this regex @deadline: 1 week
     var key = /.*:(.*)/.exec(channel)[1];
 
     // callback for the events
