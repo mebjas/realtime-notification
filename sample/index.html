@@ -4,21 +4,26 @@
 		<script src="../client/socket.notification.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script>
-			var n = new notification({url: 'http://127.0.0.1:8090'});
+			var n = new notification({
+				url: 'http://127.0.0.1:8090',
+				connect: function(data) {
+					console.log('connected to server, callback');
+				},
+				reconnect: function(data) {
+					console.log('reconnecting to server, callback');
+				}
+			});
 			n.bind({
 				channel: 'test',
 				message: function(data) {
 					console.log(data);
 					if (typeof data.hello != 'undefined') return;
 					$('body').append(' <div> New Message: ' +JSON.stringify(data.data) +'</div>');
-				},
-				connect: function(data) {
-					console.log('connected to server, callback');
 				}
 			});
 		</script>
 	</head>
 	<body>
-
+		
 	</body>
 </html>

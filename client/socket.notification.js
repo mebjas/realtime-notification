@@ -18,6 +18,7 @@ var notification = function(arg) {
 	this.connected = false;
 
 	this.reconnect(this.arg.reconnect);
+	this.connect(this.arg.connect);
 }
 
 /**
@@ -78,22 +79,22 @@ notification.prototype.bind = function(arg) {
 	this.channel = arg.channel;
 
 	if (!this.connected) {
-		if (typeof arg.connect == 'function') {
-			var _f = arg.connect;
-			arg.connect = function(data) {
+		var _connect = null;
+		if (typeof this.arg.connect == 'function') {
+			var _f = this.arg.connect;
+			_connect = function(data) {
 				_this.socket.emit('subscribe', {channel: arg.channel});
 				_f(data);
 			}
 		} else {
-			arg.connect = function(data) {
+			_connect = function(data) {
 				_this.socket.emit('subscribe', {channel: arg.channel});
 			}
 		}
 
-		this.connect(arg.connect);
+		this.connect(_connect);
 	} else {
-		// TODO: dont know what to do yet @deadline: 1 week
-		console.error('[redis notification] not connected yet');
+		_this.socket.emit('subscribe', {channel: arg.channel});
 	}
 
 	//on new message adds a new message to display

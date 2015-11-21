@@ -34,15 +34,17 @@ On the html page include these scripts
 <script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
 <script src="./client/socket.notification.js"></script>
 <script>
-var n = new notification({url: 'http://127.0.0.1:8090'});
+var n = new notification({
+	url: 'http://127.0.0.1:8090',
+	connect: function(data) {
+		console.log('connected to server, callback');
+	}
+});
 n.bind({
 	channel: 'test',
 	message: function(data) {
 		if (typeof data.hello != 'undefined') return;
 		document.body.innerHTML += ' <div> New Message: ' +JSON.stringify(data.data) +'</div>';
-	},
-	connect: function(data) {
-		console.log('connected to server, callback');
 	}
 });
 </script>
@@ -51,9 +53,15 @@ n.bind({
 ### Documentation
 **Create an object of class `notification`**. Format:
 ```js
- var n = new notification({url: 'http://127.0.0.1:8090', reconnect: function(data) {
-    console.info('reconnecting to realtime notification server');
- }});
+var n = new notification({
+	url: 'http://127.0.0.1:8090',
+	reconnect: function(data) {
+    	console.info('reconnecting to realtime notification server');
+ 	},
+ 	connect: function(data) {
+		console.log('connected to server, callback');
+	}
+});
 ```
 The constructor takes one object as argument with following format.
 object
@@ -61,6 +69,7 @@ object
 {
   url:  (string) (required) the url of the socket server,
   reconnect: (function) callback, when client reconnects to server
+  connect: (function) callback function called when client connects to the socket server
 }
 ```
 
@@ -71,9 +80,6 @@ n.bind({
 	message: function(data) {
 		if (typeof data.hello != 'undefined') return;
 		$('body').append(' <div> New Message: ' +JSON.stringify(data.data) +'</div>');
-	},
-	connect: function(data) {
-		console.log('connected to server, callback');
 	}
 });
 ```
@@ -82,7 +88,6 @@ The `bind()` method subscribes to a certain key on redis cache. It takes object 
 {
   channel: (string) (required) - key of the variable to bind to in redis cache,
   message: (function) callback function called when ever a change occurs to variable defined by key (channel),
-  connect: (function) callback function called when client connects to the socket server
 }
 ```
 
