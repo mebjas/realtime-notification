@@ -60,6 +60,9 @@ var n = new notification({
  	},
  	connect: function(data) {
 		console.log('connected to server, callback');
+	},
+	error: function(data) {
+		alert('ERROR: ' +data.message);
 	}
 });
 ```
@@ -69,7 +72,8 @@ object
 {
   url:  (string) (required) the url of the socket server,
   reconnect: (function) callback, when client reconnects to server
-  connect: (function) callback function called when client connects to the socket server
+  connect: (function) callback function called when client connects to the socket server,
+  error: (function) callback function called when error message is sent from server
 }
 ```
 

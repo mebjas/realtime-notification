@@ -60,6 +60,8 @@ redisMClient.on('ready', function() {
 // retrieved
 // TODO: add more command, cover each required one
 // @deadline: 1 week
+
+// TODO: move these commands to config file
 var commands = {
     get: ['set', 'incr', 'decr'],
     lrange: ['lpush', 'rpush', 'lpop', 'rpop'],
@@ -123,12 +125,27 @@ io.sockets.on('connection', function (socket) {
     //on subscription request joins specified room
     //later messages are broadcasted on the rooms
     socket.on('subscribe', function (data) {
+        // Check if this key is allowed
+        if (config.keys.allowed.indexOf(data.channel) == -1) {
+            socket.emit('message', {
+                channel: data.channel,
+                error: true,
+                message: 'No access to key!',
+                data: null
+            });
+            return;
+        }
+
         var key = '__keyspace@0__:' +data.channel;
+
         // subscribe to redis notification channel
         redisClient.subscribe(key);
 
         // bind to this channel
         socket.join(data.channel);
+
+        // TODO: return the current value of the key {data.channel}
+        // @note -  it can be of any data type
     });
 
     socket.on('dicsonnect', function() {

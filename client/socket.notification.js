@@ -5,6 +5,7 @@
  * @param: arg.url (string) url of web socket
  * @param: arg.reconnect (function) callback function
  * 		called when reconncted with the server
+ * @param: arg.error (function) callback function in case some error occors
  */
 var notification = function(arg) {
 	this.arg = arg;
@@ -57,7 +58,17 @@ notification.prototype.reconnect = function(callback) {
 			callback(data);
 		}
 	});
-} 
+}
+
+/**
+ * Function to deal with errors
+ * @param: data (Object) - data back from server
+ * @param: callback (function), callback to deal with such error
+ */
+notification.prototype.error = function(data, callback) {
+	console.error('[realtime notification error] ' +data.message);
+	if (typeof callback == 'function') callback(data);
+}
 
 /**
  * Function to bind to a {key}
@@ -99,6 +110,11 @@ notification.prototype.bind = function(arg) {
 
 	//on new message adds a new message to display
 	this.socket.on('message', function (data) {
+		if (typeof data.error != 'undefined' && data.error == true) {
+			_this.error(data, _this.arg.error);
+			return;
+		}
+
 		if (typeof arg.message == 'function') {
 			arg.message(data);
 		}

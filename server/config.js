@@ -12,4 +12,8 @@ config.redis = {
 	options: {}
 };
 
+config.keys = {
+	allowed: ['test']
+}
+
 module.exports = config;

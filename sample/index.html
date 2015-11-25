@@ -68,10 +68,13 @@
 					$('.notification .loading').css('background-image', 'url(loader.gif)');
 					$('.notification .loading').show();
 					$('.notification').fadeIn();
+				},
+				error: function(data) {
+					alert('ERROR: ' +data.message);
 				}
 			});
 			n.bind({
-				channel: 'test',
+				channel: 'test2',
 				message: function(data) {
 					console.log(data);
 					if (typeof data.hello != 'undefined') return;
