@@ -95,9 +95,21 @@ The `bind()` method subscribes to a certain key on redis cache. It takes object 
 }
 ```
 
+### Data Security
+you can set which all keys should be publicly accesible, in the config file at `./server/config.js`.
+It has a field `config.keys` and you can add the allowed keys in the `allowed` property.
+```js
+config.keys = {
+	allowed: ['test']
+}
+```
+This is how it looks by default.
+**Note:** If a key not listed in the config is asked for by the client, the server returns error message with `message` as:
+`No access to key!`
+
+
 ===============
 ## TODOs
-1. Add list of keys to be accessible, on server config
 2. Add access control layer, to define who can connect to server
 
 ## Demo
