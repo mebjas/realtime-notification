@@ -56,20 +56,6 @@ redisMClient.on('ready', function() {
     console.log('[info] redis data server ready');
 });
 
-// list of commands to distnguish type of data to be
-// retrieved
-// TODO: add more command, cover each required one
-// @deadline: 1 week
-
-// TODO: move these commands to config file
-var commands = {
-    get: ['set', 'incr', 'decr'],
-    lrange: ['lpush', 'rpush', 'lpop', 'rpop'],
-    none: ['del'],
-    hash: ['hset', 'hdel', 'hincrby', 'hkeys',
-            'hmget', 'hlen', 'hsetnx']
-};
-
 /**
  * wait for messages from redis channel, on message
  * send updates on the rooms named after channels. 
@@ -100,13 +86,13 @@ redisClient.on('message', function(channel, message) {
     }
 
     // depending upon data type get such data
-    if (commands.get.indexOf(message) != -1) {
+    if (config.commands.get.indexOf(message) != -1) {
         redisMClient.get(key, callback);
-    } else if (commands.lrange.indexOf(message) != -1) {
+    } else if (config.commands.lrange.indexOf(message) != -1) {
         redisMClient.lrange(key, 0, -1, callback);
-    } else if (commands.none.indexOf(message) != -1) {
+    } else if (config.commands.none.indexOf(message) != -1) {
         callback(null, null);
-    } else if (commands.hash.indexOf(message) != -1) {
+    } else if (config.commands.hash.indexOf(message) != -1) {
         redisMClient.hgetall(key, callback);
     }
 });
